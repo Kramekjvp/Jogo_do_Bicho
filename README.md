@@ -20,8 +20,26 @@ Os dados gerados por este repositório permitem a aplicação de Estatística De
 
 ## Como Executar
 
-**1. Compilar os códigos:**
-Abra o terminal na pasta do projeto e utilize o compilador `gcc`:
-```bash
+## 1. Compilar os códigos:
+Abra o terminal na pasta do projeto e utilize o compilador gcc:
+
 gcc criar_jogo_bicho.c -o criar_jogo_bicho
 gcc bicho_exportado_csv.c -o bicho_exportado_csv
+
+## 2. Gerar a série histórica:
+Execute o gerador para criar o arquivo texto com os concursos. Você deve informar a quantidade de sorteios desejada logo após o comando (exemplo: 15000). Se nenhum valor for passado, o programa utilizará o padrão de 5000 jogos.
+
+* No Linux/Mac:
+'./criar_jogo_bicho 15000'
+
+* No Windows:
+'criar_jogo_bicho.exe 15000'
+
+## 3. Exportar para CSV:
+Execute o extrator para processar o arquivo texto gerado e criar o bicho_exportado.csv.
+
+* No Linux/Mac:
+'./bicho_exportado_csv'
+
+* No Windows:
+'bicho_exportado_csv.exe'
