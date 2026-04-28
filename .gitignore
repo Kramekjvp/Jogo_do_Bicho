@@ -2,3 +2,4 @@
 *.txt
 *.exe
 a.out*.o 
+*.o 
