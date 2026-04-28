@@ -2,11 +2,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <locale.h> //PT-BR
 
 #define LINE_LENGTH 256
 #define MAX_MEMORY_RECORDS 1000 // Tamanho do bloco para a RAM
-#define QUANTIDADE_TOTAL 1000   // Total de sorteios que queremos gerar
-#define MAX_TEMP_FILES 100
+/*#define QUANTIDADE_TOTAL 1000   // Total de sorteios que queremos gerar*/
+#define MAX_TEMP_FILES 200      //Permitir para até 200.000 registros
 
 // Estrutura adaptada para o Merge Sort
 typedef struct {
@@ -21,7 +22,6 @@ typedef struct {
     char nome_temp[LINE_LENGTH];
 } FonteTemporaria;
 
-// 1. Função de Comparação (Exatamente como no ProjetoMercado)
 int compare_Date(const void *a, const void *b) {
     const SorteioBruto *va = (const SorteioBruto *)a;
     const SorteioBruto *vb = (const SorteioBruto *)b;
@@ -31,7 +31,6 @@ int compare_Date(const void *a, const void *b) {
     return va->dia - vb->dia;
 }
 
-// 2. Geração de Datas (Lógica do ProjetoMercado)
 void gerarDataAleatoria(int *dia, int *mes, int *ano) {
     *ano = rand() % 5 + 2020;
     *mes = rand() % 12 + 1;
@@ -43,18 +42,18 @@ void gerarDataAleatoria(int *dia, int *mes, int *ano) {
     *dia = rand() % dias_no_mes + 1;
 }
 
-// 3. Etapa de DIVISÃO: Gera em blocos, ordena na RAM e salva em Temps
-int gerarEDividir(char temp_files[][LINE_LENGTH]) {
+//Etapa de DIVISÃO: Gera em blocos, ordena na RAM e salva em Temps
+int gerarEDividir(char temp_files[][LINE_LENGTH], int quantidade_total) {
     int file_count = 0;
     int gerados = 0;
     SorteioBruto *buffer = malloc(MAX_MEMORY_RECORDS * sizeof(SorteioBruto));
 
     if (!buffer) return 0;
 
-    while (gerados < QUANTIDADE_TOTAL) {
+    while (gerados < quantidade_total) {
         int records_in_chunk = 0;
 
-        while (records_in_chunk < MAX_MEMORY_RECORDS && gerados < QUANTIDADE_TOTAL) {
+        while (records_in_chunk < MAX_MEMORY_RECORDS && gerados < quantidade_total) {
             gerarDataAleatoria(&buffer[records_in_chunk].dia, &buffer[records_in_chunk].mes, &buffer[records_in_chunk].ano);
             for(int j = 0; j < 5; j++) {
                 buffer[records_in_chunk].p[j] = rand() % 10000;
@@ -101,7 +100,7 @@ int loadArquivosBicho(FonteTemporaria *fonte) {
     return 1;
 }
 
-// 4. Etapa de CONQUISTA: Merge e Atribuição do Concurso
+// Etapa de CONQUISTA: Merge e Atribuição do Concurso
 void conquerArquivo(int file_count, char temp_files[][LINE_LENGTH], const char *output_file) {
     FILE *output = fopen(output_file, "w");
     if (!output) return;
@@ -156,20 +155,30 @@ void conquerArquivo(int file_count, char temp_files[][LINE_LENGTH], const char *
     fclose(output);
 }
 
-int main() {
+int main(int argc, char *argv[]) {
+    setlocale(LC_ALL, "Portuguese");
     srand(time(NULL));
     char temp_files[MAX_TEMP_FILES][LINE_LENGTH];
     const char* arquivoFinal = "bicho_historico.txt";
+    int quantidade = 100; //Valor Padrão caso não informado
+
+    if (argc > 1) {
+        quantidade = atoi(argv[1]);
+        if (quantidade <= 0) {
+            printf("Quantidade invalida fornecida. Utilizando valor padrao de 100.\n");
+            quantidade = 100;
+        }
+    }
 
     printf("Iniciando geração de dados do Jogo do Bicho...\n");
 
     // Divide (Gera e ordena na RAM)
-    int num_files = gerarEDividir(temp_files);
+    int num_files = gerarEDividir(temp_files, quantidade);
 
     if (num_files > 0) {
         // Conquista (Faz o Merge e atrela o Concurso)
         conquerArquivo(num_files, temp_files, arquivoFinal);
-        printf("Série histórica de %d concursos criada com sucesso em '%s'.\n", QUANTIDADE_TOTAL, arquivoFinal);
+        printf("Série histórica de %d concursos criada com sucesso em '%s'.\n", quantidade, arquivoFinal);
         printf("Você pode agora rodar o extrator ETL para converter este arquivo para CSV.\n");
     } else {
         printf("Erro na alocação da memória para divisão do arquivo.\n");

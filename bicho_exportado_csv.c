@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 
 #define LINE_LENGTH 256
 
@@ -97,6 +98,7 @@ void exportarParaCSV(const char* arquivoEntrada, const char* arquivoSaida) {
 }
 
 int main() {
+    setlocale(LC_ALL, "Portuguese");
     // Para testar, certifique-se de criar um 'bicho_historico.txt' no mesmo diretório
     // contendo linhas no formato: DD/MM/AAAA Concurso P1 P2 P3 P4 P5
     const char* arquivoEntrada = "bicho_historico.txt";
