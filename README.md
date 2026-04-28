@@ -7,20 +7,20 @@ Este repositório contém os algoritmos necessários para construir uma série h
 
 O código resolve problemas de uso excessivo de RAM aplicando conceitos de ordenação externa (Merge Sort) e alocação em blocos de memória.
 
-##Arquitetura e Funcionalidades
+## Arquitetura e Funcionalidades
 * **Gerador de Série Histórica (`gerador_bicho.c`):** Simula sorteios aleatórios de datas e milhares, ordenando os dados cronologicamente via Merge Sort com arquivos temporários para manter a sequência de concursos.
 * **Extrator e Decodificador ETL (`exportador_bicho.c`):** Lê o histórico em formato texto sequencial e aplica funções matemáticas para decodificar Milhar, Dezena e o Grupo (Bicho).
 * **Exportação CSV:** Converte os dados estruturados em `.csv` (separado por `;`) padronizado para ferramentas de análise quantitativa.
 
-##Metodologia Estatística
+## Metodologia Estatística
 Os dados gerados por este repositório permitem a aplicação de Estatística Descritiva, como:
 * Distribuição de Frequência Absoluta e Relativa (Variáveis Qualitativas - Grupos/Bichos).
 * Medidas de Tendência Central e Dispersão (Variáveis Quantitativas - Milhar/Dezena).
 * Elaboração de Histogramas, Box Plots e Gráficos de Barras.
 
-##Como Executar
+## Como Executar
 
-**1. Compilar os códigos:**
+** 1. Compilar os códigos:**
 Abra o terminal na pasta do projeto e utilize o compilador `gcc`:
 ```bash
 gcc gerador_bicho.c -o gerador
